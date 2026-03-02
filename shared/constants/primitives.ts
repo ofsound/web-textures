@@ -1,0 +1,25 @@
+import type { PrimitiveDefinition } from '~~/shared/types/texture'
+
+export const PRIMITIVES: PrimitiveDefinition[] = [
+  { id: 'linear-stripes', signature: 'p_001', name: 'Linear Stripes', category: 'geometric', description: 'Horizontal repeating stripes.', defaults: { colorA: '#1b4b66', colorB: '#d8eef5', width: 12, angle: 0 } },
+  { id: 'diagonal-lines', signature: 'p_002', name: 'Diagonal Lines', category: 'geometric', description: 'Diagonal line repetition.', defaults: { colorA: '#0f3443', colorB: '#dff3eb', width: 10, angle: 45 } },
+  { id: 'dots', signature: 'p_003', name: 'Dots', category: 'organic', description: 'Polka dot field.', defaults: { colorA: '#2a5f7a', colorB: '#f8f4e8', size: 8, gap: 24 } },
+  { id: 'checkerboard', signature: 'p_004', name: 'Checkerboard', category: 'geometric', description: 'Alternating tile board.', defaults: { colorA: '#2b3945', colorB: '#e8edf1', size: 24 } },
+  { id: 'grid', signature: 'p_005', name: 'Grid', category: 'technical', description: 'Fine crossed grid.', defaults: { colorA: '#3e5a6f', colorB: '#f4f8fb', width: 1, gap: 28 } },
+  { id: 'zigzag', signature: 'p_006', name: 'Zigzag', category: 'geometric', description: 'Sawtooth zig pattern.', defaults: { colorA: '#163042', colorB: '#e9f6ff', size: 18 } },
+  { id: 'waves', signature: 'p_007', name: 'Waves', category: 'organic', description: 'Repeating wave bands.', defaults: { colorA: '#145374', colorB: '#d9eef7', size: 30 } },
+  { id: 'radial-burst', signature: 'p_008', name: 'Radial Burst', category: 'organic', description: 'Concentric radial burst.', defaults: { colorA: '#2f4858', colorB: '#f7f4ea', size: 24 } },
+  { id: 'noise-speckles', signature: 'p_009', name: 'Noise Speckles', category: 'noise', description: 'Soft speckled noise.', defaults: { colorA: '#253341', colorB: '#f2efe6', density: 18 } },
+  { id: 'crosshatch', signature: 'p_010', name: 'Crosshatch', category: 'technical', description: 'Crossed lines for print feel.', defaults: { colorA: '#364f63', colorB: '#f6fbff', gap: 14 } },
+  { id: 'honeycomb', signature: 'p_011', name: 'Honeycomb', category: 'geometric', description: 'Hexagonal lattice.', defaults: { colorA: '#314a59', colorB: '#edf7fa', size: 22 } },
+  { id: 'triangles', signature: 'p_012', name: 'Triangles', category: 'geometric', description: 'Tessellated triangle grid.', defaults: { colorA: '#253c53', colorB: '#f4f8fb', size: 26 } },
+  { id: 'concentric-rings', signature: 'p_013', name: 'Concentric Rings', category: 'organic', description: 'Repeating rings.', defaults: { colorA: '#335b72', colorB: '#eaf5fd', size: 30 } },
+  { id: 'plaid', signature: 'p_014', name: 'Plaid', category: 'fabric', description: 'Layered plaid lines.', defaults: { colorA: '#233544', colorB: '#f0f6fa', width: 3, gap: 24 } },
+  { id: 'halftone', signature: 'p_015', name: 'Halftone', category: 'print', description: 'Halftone circles.', defaults: { colorA: '#3a5467', colorB: '#f9f6f0', size: 10, gap: 18 } },
+  { id: 'mesh-gradient', signature: 'p_016', name: 'Mesh Gradient', category: 'gradient', description: 'Layered mesh cloud.', defaults: { colorA: '#2d5670', colorB: '#f7efe3', intensity: 0.6 } },
+  { id: 'carbon-fiber', signature: 'p_017', name: 'Carbon Fiber', category: 'material', description: 'Dark woven feel.', defaults: { colorA: '#1c2229', colorB: '#424a53', size: 12 } },
+  { id: 'paper-grain', signature: 'p_018', name: 'Paper Grain', category: 'material', description: 'Warm paper texture.', defaults: { colorA: '#d9ccb2', colorB: '#f6efe0', density: 22 } },
+  { id: 'blueprint-grid', signature: 'p_019', name: 'Blueprint Grid', category: 'technical', description: 'Blueprint-style grid.', defaults: { colorA: '#0d4970', colorB: '#cae9ff', gap: 32 } },
+  { id: 'starfield', signature: 'p_020', name: 'Starfield', category: 'noise', description: 'Sparse star points.', defaults: { colorA: '#0f1f2e', colorB: '#f6f9ff', density: 12 } },
+  { id: 'perlin-noise', signature: 'p_021', name: 'Perlin Noise', category: 'noise', description: 'Tileable fractal Perlin-style noise via SVG feTurbulence.', defaults: { baseFrequency: 0.9, octaves: 4, seed: 7, scale: 96, noiseType: 'fractalNoise' } }
+]

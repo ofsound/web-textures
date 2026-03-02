@@ -1,0 +1,11 @@
+.nuxt
+.output
+node_modules
+.env
+.env.*
+!.env.example
+coverage
+playwright-report
+test-results
+.DS_Store
+drizzle/*.sqlite

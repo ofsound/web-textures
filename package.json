@@ -1,0 +1,45 @@
+{
+  "name": "texturelab",
+  "private": true,
+  "type": "module",
+  "version": "0.1.0",
+  "scripts": {
+    "dev": "nuxt dev",
+    "build": "nuxt build",
+    "preview": "nuxt preview",
+    "postinstall": "nuxt prepare",
+    "typecheck": "nuxt typecheck",
+    "db:generate": "drizzle-kit generate",
+    "db:migrate": "drizzle-kit migrate",
+    "db:studio": "drizzle-kit studio",
+    "test": "npm run test:unit && npm run test:integration",
+    "test:unit": "vitest run test/unit",
+    "test:integration": "vitest run test/integration",
+    "test:e2e": "playwright test"
+  },
+  "dependencies": {
+    "@auth/core": "latest",
+    "@nuxtjs/tailwindcss": "latest",
+    "@sidebase/nuxt-auth": "latest",
+    "@vueuse/core": "latest",
+    "drizzle-orm": "latest",
+    "nanoid": "latest",
+    "next-auth": "^4.21.1",
+    "nuxt": "latest",
+    "pg": "latest",
+    "sanitize-html": "latest",
+    "slugify": "latest",
+    "vue": "latest",
+    "zod": "latest"
+  },
+  "devDependencies": {
+    "@playwright/test": "latest",
+    "@types/node": "latest",
+    "@types/pg": "^8.16.0",
+    "@types/sanitize-html": "latest",
+    "drizzle-kit": "latest",
+    "typescript": "latest",
+    "vitest": "latest",
+    "vue-tsc": "^3.2.5"
+  }
+}

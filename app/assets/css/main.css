@@ -1,0 +1,29 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --texturelab-canvas: #f7f6f3;
+  --texturelab-ink: #1b1f22;
+  --texturelab-accent: #076a8c;
+  --texturelab-accent-soft: #d8eef5;
+}
+
+html,
+body,
+#__nuxt {
+  min-height: 100%;
+}
+
+body {
+  margin: 0;
+  font-family: 'IBM Plex Sans', 'Avenir Next', 'Segoe UI', sans-serif;
+  background: radial-gradient(circle at 15% 20%, #ffffff 0%, #f2f0ea 35%, #ece9e2 100%);
+  color: var(--texturelab-ink);
+}
+
+.texture-preview {
+  background-repeat: repeat;
+  background-size: var(--texture-scale, 56px) var(--texture-scale, 56px);
+  background-position: var(--texture-position, center);
+}
