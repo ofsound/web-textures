@@ -1,0 +1,9 @@
+{
+  "compatibility_date": "2025-11-25",
+  "pages_build_output_dir": "..",
+  "name": "ofsound-web-textures",
+  "compatibility_flags": [
+    "nodejs_compat",
+    "no_nodejs_compat_v2"
+  ]
+}

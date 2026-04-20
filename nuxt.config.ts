@@ -1,3 +1,8 @@
+import { dirname, resolve } from 'node:path'
+import { fileURLToPath } from 'node:url'
+
+const __dirname = dirname(fileURLToPath(import.meta.url))
+
 export default defineNuxtConfig({
   compatibilityDate: '2025-12-01',
   devtools: { enabled: true },
@@ -29,5 +34,16 @@ export default defineNuxtConfig({
   typescript: {
     strict: true,
     typeCheck: false
+  },
+  // Cloudflare Workers/Pages: pure-js `pg` still references optional `pg-native`;
+  // Nitro must enable node compat + generated wrangler flags or the bundle fails.
+  nitro: {
+    alias: {
+      'pg-native': resolve(__dirname, 'server/db/pg-native-stub.cjs')
+    },
+    cloudflare: {
+      deployConfig: true,
+      nodeCompat: true
+    }
   }
 })
