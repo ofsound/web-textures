@@ -32,6 +32,9 @@
     "vue": "latest",
     "zod": "latest"
   },
+  "optionalDependencies": {
+    "@oxc-parser/binding-linux-x64-gnu": "0.112.0"
+  },
   "devDependencies": {
     "@playwright/test": "latest",
     "@types/node": "latest",
