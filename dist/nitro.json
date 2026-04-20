@@ -1,0 +1,26 @@
+{
+  "date": "2026-04-20T19:45:03.055Z",
+  "preset": "cloudflare-pages",
+  "framework": {
+    "name": "nuxt",
+    "version": "4.3.1"
+  },
+  "versions": {
+    "nitro": "2.13.1"
+  },
+  "commands": {
+    "preview": "npx wrangler --cwd . pages dev",
+    "deploy": "npx wrangler --cwd . pages deploy"
+  },
+  "config": {
+    "cloudflare": {
+      "deployConfig": true,
+      "nodeCompat": true,
+      "wrangler": {
+        "vars": {
+          "NUXT_AUTH_ORIGIN": "http://localhost:3000/api/auth"
+        }
+      }
+    }
+  }
+}

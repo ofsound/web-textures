@@ -1,0 +1,12 @@
+{
+  "compatibility_date": "2025-11-25",
+  "vars": {
+    "NUXT_AUTH_ORIGIN": "http://localhost:3000/api/auth"
+  },
+  "pages_build_output_dir": "..",
+  "name": "ofsound-web-textures",
+  "compatibility_flags": [
+    "nodejs_compat",
+    "no_nodejs_compat_v2"
+  ]
+}
