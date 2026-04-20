@@ -2,6 +2,7 @@ import CredentialsProvider from '@auth/core/providers/credentials'
 import { NuxtAuthHandler } from '#auth'
 import { createError, eventHandler } from 'h3'
 import { resolveAdminEmailsList, resolveAdminPassword, resolveAuthSecret } from '~~/server/utils/admin-env'
+import { decodeAuthJwt, encodeAuthJwt } from '~~/server/utils/auth-jwt'
 
 function createAuthHandler(secret: string) {
   return NuxtAuthHandler({
@@ -60,6 +61,10 @@ function createAuthHandler(secret: string) {
 
         return session
       }
+    },
+    jwt: {
+      encode: encodeAuthJwt,
+      decode: decodeAuthJwt
     }
   })
 }
