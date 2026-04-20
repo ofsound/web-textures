@@ -3,6 +3,27 @@ import { fileURLToPath } from 'node:url'
 
 const __dirname = dirname(fileURLToPath(import.meta.url))
 
+/**
+ * Sidebase nuxt-auth runs `assertOrigin` at Nitro startup (no request yet). In production it
+ * requires an absolute auth base URL (protocol + host). Cloudflare deploy validation runs the
+ * worker the same way, so rely on explicit env or CF Pages build vars.
+ *
+ * @see https://sidebase.io/nuxt-auth/resources/errors
+ */
+function resolveAuthBaseUrl(): string | undefined {
+  const raw = process.env.NUXT_AUTH_ORIGIN || process.env.AUTH_ORIGIN
+  if (raw) {
+    const trimmed = raw.replace(/\/$/, '')
+    return trimmed.endsWith('/api/auth') ? trimmed : `${trimmed}/api/auth`
+  }
+  if (process.env.CF_PAGES && process.env.CF_PAGES_URL) {
+    return `${process.env.CF_PAGES_URL.replace(/\/$/, '')}/api/auth`
+  }
+  return undefined
+}
+
+const authBaseUrl = resolveAuthBaseUrl()
+
 export default defineNuxtConfig({
   compatibilityDate: '2025-12-01',
   devtools: { enabled: true },
@@ -21,6 +42,9 @@ export default defineNuxtConfig({
     provider: {
       type: 'authjs'
     },
+    // Default module key is AUTH_ORIGIN; align with Nuxt-style NUXT_AUTH_ORIGIN in .env
+    originEnvKey: 'NUXT_AUTH_ORIGIN',
+    ...(authBaseUrl ? { baseURL: authBaseUrl } : {}),
     sessionRefresh: {
       enableOnWindowFocus: true,
       enablePeriodically: false
