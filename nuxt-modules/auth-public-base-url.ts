@@ -1,9 +1,27 @@
 import { defineNuxtModule } from '@nuxt/kit'
 
+/**
+ * Sidebase reads `NUXT_AUTH_ORIGIN` / `AUTH_ORIGIN` directly in `resolveApiBaseURL`. If the value
+ * is only an origin (no `/api/auth`), `returnOnlyPathname` becomes `/` and session fetches hit
+ * `/session` instead of `/api/auth/session`. Normalize env so Sidebase always sees the full base.
+ */
+function normalizeAuthOriginEnvVars() {
+  for (const key of ['NUXT_AUTH_ORIGIN', 'AUTH_ORIGIN'] as const) {
+    const raw = process.env[key]
+    if (!raw || typeof raw !== 'string') {
+      continue
+    }
+    const trimmed = raw.trim().replace(/\/$/, '')
+    if (trimmed && !trimmed.endsWith('/api/auth')) {
+      process.env[key] = `${trimmed}/api/auth`
+    }
+  }
+}
+
 function resolveAuthBaseUrl(): string | undefined {
   const raw = process.env.NUXT_AUTH_ORIGIN || process.env.AUTH_ORIGIN
   if (raw) {
-    const trimmed = raw.replace(/\/$/, '')
+    const trimmed = raw.trim().replace(/\/$/, '')
     return trimmed.endsWith('/api/auth') ? trimmed : `${trimmed}/api/auth`
   }
   const site = process.env.NUXT_PUBLIC_SITE_URL
@@ -27,6 +45,7 @@ function resolveAuthBaseUrl(): string | undefined {
 export default defineNuxtModule({
   meta: { name: 'auth-public-base-url' },
   setup(_options, nuxt) {
+    normalizeAuthOriginEnvVars()
     const base = resolveAuthBaseUrl()
     if (!base) {
       return
