@@ -1,1 +1,0 @@
-{"version":3,"file":"index.get.mjs","sources":["../../../../../server/api/test-presets/index.get.ts"],"names":["index_get","defineEventHandler","async","repository","getTextureRepository","items","listPresets"],"mappings":"yeAEA,MAAAA,EAAAC,EAAAC,UACA,MAAAC,EAAAC,IACA,MAAA,CAAAC,YAAAF,EAAAG"}

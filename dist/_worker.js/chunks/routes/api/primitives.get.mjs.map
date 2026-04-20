@@ -1,1 +1,0 @@
-{"version":3,"file":"primitives.get.mjs","sources":["../../../../../server/api/primitives.get.ts"],"names":["primitives_get","defineEventHandler","items","PRIMITIVES"],"mappings":"0UAEA,MAAAA,EAAAC,EAAA,KACA,CAAAC,MAAAC"}
