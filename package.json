@@ -19,6 +19,7 @@
   },
   "dependencies": {
     "@auth/core": "latest",
+    "@neondatabase/serverless": "^1.1.0",
     "@nuxtjs/tailwindcss": "latest",
     "@sidebase/nuxt-auth": "latest",
     "@vueuse/core": "latest",
