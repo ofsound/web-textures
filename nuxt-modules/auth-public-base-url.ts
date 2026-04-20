@@ -18,41 +18,32 @@ function normalizeAuthOriginEnvVars() {
   }
 }
 
-function resolveAuthBaseUrl(): string | undefined {
-  const raw = process.env.NUXT_AUTH_ORIGIN || process.env.AUTH_ORIGIN
-  if (raw) {
-    const trimmed = raw.trim().replace(/\/$/, '')
-    return trimmed.endsWith('/api/auth') ? trimmed : `${trimmed}/api/auth`
+/**
+ * Absolute auth URL for Sidebase `resolveApiBaseURL(..., false)` / assertOrigin — must come from
+ * env, not `public.auth.baseURL`. NextAuth receives `basePath` from `public.auth.baseURL` and
+ * expects a pathname only (e.g. `/api/auth`). Setting an absolute URL there breaks `/session`.
+ */
+function ensureSyntheticAuthOrigin() {
+  if (process.env.NUXT_AUTH_ORIGIN || process.env.AUTH_ORIGIN) {
+    return
   }
-  const site = process.env.NUXT_PUBLIC_SITE_URL
+  const site = process.env.NUXT_PUBLIC_SITE_URL?.trim()
   if (site) {
-    return `${site.replace(/\/$/, '')}/api/auth`
+    process.env.NUXT_AUTH_ORIGIN = `${site.replace(/\/$/, '')}/api/auth`
+    return
   }
   const cf = process.env.CF_PAGES
   const onCfPages = cf === 'true' || cf === '1' || String(cf).toLowerCase() === 'true'
-  const pagesUrl = process.env.CF_PAGES_URL
+  const pagesUrl = process.env.CF_PAGES_URL?.trim()
   if (onCfPages && pagesUrl) {
-    return `${pagesUrl.replace(/\/$/, '')}/api/auth`
+    process.env.NUXT_AUTH_ORIGIN = `${pagesUrl.replace(/\/$/, '')}/api/auth`
   }
-  return undefined
 }
 
-/**
- * @sidebase/nuxt-auth merges `topLevelDefaults` after user `auth` config, so `auth.baseURL` in
- * `nuxt.config` is overwritten by `/api/auth`. Patch `runtimeConfig.public.auth.baseURL` after
- * the auth module runs so production / Cloudflare deploy validation see an absolute URL.
- */
 export default defineNuxtModule({
   meta: { name: 'auth-public-base-url' },
-  setup(_options, nuxt) {
+  setup() {
     normalizeAuthOriginEnvVars()
-    const base = resolveAuthBaseUrl()
-    if (!base) {
-      return
-    }
-    const auth = nuxt.options.runtimeConfig.public?.auth as { baseURL?: string } | undefined
-    if (auth && typeof auth === 'object') {
-      auth.baseURL = base
-    }
+    ensureSyntheticAuthOrigin()
   }
 })
