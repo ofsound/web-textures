@@ -3,6 +3,31 @@ import { fileURLToPath } from 'node:url'
 
 const __dirname = dirname(fileURLToPath(import.meta.url))
 
+/** Resolve public auth base URL at build time so it can be written into `wrangler.json` `vars`. */
+function wranglerPlaintextAuthOrigin(): Record<string, string> | undefined {
+  const explicit = process.env.NUXT_AUTH_ORIGIN?.trim()
+  const site = process.env.NUXT_PUBLIC_SITE_URL?.trim()
+  const cf = process.env.CF_PAGES
+  const onCfPages = cf === 'true' || cf === '1' || String(cf).toLowerCase() === 'true'
+  const pagesUrl = process.env.CF_PAGES_URL?.trim()
+
+  let v =
+    explicit ||
+    (site ? `${site.replace(/\/$/, '')}/api/auth` : '') ||
+    (onCfPages && pagesUrl ? `${pagesUrl.replace(/\/$/, '')}/api/auth` : '')
+
+  if (!v) {
+    return undefined
+  }
+  v = v.replace(/\/$/, '')
+  if (!v.endsWith('/api/auth')) {
+    v = `${v}/api/auth`
+  }
+  return { NUXT_AUTH_ORIGIN: v }
+}
+
+const cfAuthVars = wranglerPlaintextAuthOrigin()
+
 export default defineNuxtConfig({
   compatibilityDate: '2025-12-01',
   devtools: { enabled: true },
@@ -49,7 +74,12 @@ export default defineNuxtConfig({
     },
     cloudflare: {
       deployConfig: true,
-      nodeCompat: true
+      nodeCompat: true,
+      // Bakes `NUXT_AUTH_ORIGIN` into wrangler `vars` when it can be resolved at build time
+      // (helps Sidebase `assertOrigin` during the upload-time worker run).
+      wrangler: {
+        ...(cfAuthVars ? { vars: cfAuthVars } : {})
+      }
     }
   }
 })
