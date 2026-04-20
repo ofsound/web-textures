@@ -34,7 +34,8 @@ export default defineNuxtConfig({
   modules: ['@nuxtjs/tailwindcss', '@sidebase/nuxt-auth', './nuxt-modules/auth-public-base-url'],
   css: ['~/assets/css/main.css'],
   runtimeConfig: {
-    databaseUrl: process.env.DATABASE_URL,
+    // Prefer NUXT_DATABASE_URL (Nuxt override) so Workers/Pages runtime hydration matches local DATABASE_URL.
+    databaseUrl: process.env.NUXT_DATABASE_URL || process.env.DATABASE_URL,
     authSecret: process.env.NUXT_AUTH_SECRET,
     adminEmails: process.env.NUXT_ADMIN_EMAILS,
     adminPassword: process.env.NUXT_ADMIN_PASSWORD,
