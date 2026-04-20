@@ -13,7 +13,7 @@ const links = [
     <header class="mb-6 rounded-2xl border border-slate-200/80 bg-white/80 p-4 shadow-panel backdrop-blur-sm">
       <div class="flex flex-wrap items-center justify-between gap-4">
         <div>
-          <h1 class="text-2xl font-semibold tracking-tight">TextureLab</h1>
+          <h1 class="text-2xl font-semibold tracking-tight">svg.ofsound.net</h1>
           <p class="text-sm text-slate-600">Portable CSS/SVG texture authoring and showcase</p>
         </div>
         <nav class="flex items-center gap-2 rounded-xl bg-slate-100 p-1">
