@@ -71,7 +71,9 @@ export default defineNuxtConfig({
   // Nitro must enable node compat + generated wrangler flags or the bundle fails.
   nitro: {
     alias: {
-      'pg-native': resolve(__dirname, 'server/db/pg-native-stub.cjs')
+      'pg-native': resolve(__dirname, 'server/db/pg-native-stub.cjs'),
+      // next-auth/jwt uses `uuid` → `crypto.randomFillSync`, which often fails on Cloudflare Workers.
+      uuid: resolve(__dirname, 'server/db/uuid-jwt-shim.cjs')
     },
     cloudflare: {
       deployConfig: true,

@@ -8,18 +8,23 @@ const { signIn, status } = useAuth()
 async function submit() {
   errorText.value = ''
 
-  const result = await signIn('credentials', {
-    email: email.value,
-    password: password.value,
-    redirect: false
-  })
+  try {
+    const result = await signIn('credentials', {
+      email: email.value,
+      password: password.value,
+      redirect: false
+    })
 
-  if (result?.error) {
-    errorText.value = 'Invalid credentials'
-    return
+    if (result?.error) {
+      errorText.value = 'Invalid credentials'
+      return
+    }
+
+    await navigateTo('/admin')
+  } catch {
+    // e.g. auth POST 500 + malformed client handling in useAuth, or network failure
+    errorText.value = 'Sign-in failed (server error). Try again or check deployment logs.'
   }
-
-  await navigateTo('/admin')
 }
 </script>
 

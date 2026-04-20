@@ -3,10 +3,8 @@ import { NuxtAuthHandler } from '#auth'
 import { resolveAdminEmailsList, resolveAdminPassword, resolveAuthSecret } from '~~/server/utils/admin-env'
 
 export default NuxtAuthHandler({
-  // Getter: read env each request so Cloudflare bindings are not captured only at module load.
-  get secret() {
-    return resolveAuthSecret()
-  },
+  // Sidebase reads `secret` once at init; resolve here (env + runtimeConfig) for Workers.
+  secret: resolveAuthSecret(),
   pages: {
     signIn: '/login'
   },
@@ -54,16 +52,6 @@ export default NuxtAuthHandler({
     }) as never
   ],
   callbacks: {
-    jwt({ token, user }) {
-      if (user && typeof user.email === 'string') {
-        token.email = user.email
-        token.name = typeof user.name === 'string' ? user.name : token.name
-        if (user.id != null) {
-          token.sub = String(user.id)
-        }
-      }
-      return token
-    },
     session({ session, token }) {
       if (session.user && token && typeof token.email === 'string') {
         session.user.email = token.email
