@@ -1,12 +1,12 @@
 import CredentialsProvider from '@auth/core/providers/credentials'
-import { useRuntimeConfig } from '#imports'
 import { NuxtAuthHandler } from '#auth'
-
-const runtimeConfig = useRuntimeConfig()
+import { resolveAdminEmailsList, resolveAdminPassword, resolveAuthSecret } from '~~/server/utils/admin-env'
 
 export default NuxtAuthHandler({
-  // Use runtimeConfig (not raw process.env) so Cloudflare / Nitro can inject secrets at runtime.
-  secret: runtimeConfig.authSecret as string,
+  // Getter: read env each request so Cloudflare bindings are not captured only at module load.
+  get secret() {
+    return resolveAuthSecret()
+  },
   pages: {
     signIn: '/login'
   },
@@ -18,7 +18,6 @@ export default NuxtAuthHandler({
         password: { label: 'Password', type: 'password' }
       },
       authorize(credentials) {
-        const config = useRuntimeConfig()
         const email = typeof credentials?.email === 'string' ? credentials.email : ''
         const submittedPassword = typeof credentials?.password === 'string' ? credentials.password : ''
 
@@ -26,12 +25,9 @@ export default NuxtAuthHandler({
           return null
         }
 
-        const allowlist = String(config.adminEmails ?? '')
-          .split(',')
-          .map((e) => e.trim().toLowerCase())
-          .filter(Boolean)
+        const allowlist = resolveAdminEmailsList()
 
-        const password = String(config.adminPassword ?? '')
+        const password = resolveAdminPassword()
 
         if (!allowlist.includes(email.toLowerCase())) {
           return null
