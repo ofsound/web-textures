@@ -18,8 +18,16 @@ export default NuxtAuthHandler({
         password: { label: 'Password', type: 'password' }
       },
       authorize(credentials) {
-        const email = typeof credentials?.email === 'string' ? credentials.email : ''
-        const submittedPassword = typeof credentials?.password === 'string' ? credentials.password : ''
+        const raw =
+          credentials && typeof credentials === 'object'
+            ? (credentials as Record<string, unknown>)
+            : {}
+        const emailRaw =
+          (typeof raw.email === 'string' ? raw.email : '') ||
+          (typeof raw.username === 'string' ? raw.username : '')
+        const email = emailRaw.trim().toLowerCase()
+        const submittedPassword =
+          typeof raw.password === 'string' ? raw.password.trim() : ''
 
         if (!email || !submittedPassword) {
           return null
@@ -27,9 +35,9 @@ export default NuxtAuthHandler({
 
         const allowlist = resolveAdminEmailsList()
 
-        const password = resolveAdminPassword()
+        const password = resolveAdminPassword().trim()
 
-        if (!allowlist.includes(email.toLowerCase())) {
+        if (!allowlist.includes(email)) {
           return null
         }
 
@@ -38,14 +46,24 @@ export default NuxtAuthHandler({
         }
 
         return {
-          id: email.toLowerCase(),
-          email: email.toLowerCase(),
+          id: email,
+          email,
           name: 'TextureLab Admin'
         }
       }
     }) as never
   ],
   callbacks: {
+    jwt({ token, user }) {
+      if (user && typeof user.email === 'string') {
+        token.email = user.email
+        token.name = typeof user.name === 'string' ? user.name : token.name
+        if (user.id != null) {
+          token.sub = String(user.id)
+        }
+      }
+      return token
+    },
     session({ session, token }) {
       if (session.user && token && typeof token.email === 'string') {
         session.user.email = token.email
