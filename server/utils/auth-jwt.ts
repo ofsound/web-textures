@@ -1,26 +1,26 @@
 import { hkdf } from '@panva/hkdf'
 import { EncryptJWT, base64url, calculateJwkThumbprint, jwtDecrypt } from 'jose'
+import type { JWT, JWTDecodeParams, JWTEncodeParams } from 'next-auth/jwt'
 
 const DEFAULT_MAX_AGE = 30 * 24 * 60 * 60
 const JWT_ALG = 'dir'
 const JWT_ENC = 'A256GCM'
+const JWT_THUMBPRINT_DIGEST = 'sha256'
+
+type AuthJwtEncodeParams = JWTEncodeParams & { salt?: string }
+type AuthJwtDecodeParams = JWTDecodeParams & { salt?: string }
 
 function now() {
   return (Date.now() / 1000) | 0
 }
 
-async function getDerivedEncryptionKey(secret: string, salt: string) {
+async function getDerivedEncryptionKey(secret: string | Uint8Array, salt: string) {
   return hkdf('sha256', secret, salt, `Auth.js Generated Encryption Key (${salt})`, 32)
 }
 
-export async function encodeAuthJwt(params: {
-  token?: Record<string, unknown>
-  secret?: string | string[]
-  maxAge?: number
-  salt?: string
-}) {
+export async function encodeAuthJwt(params: AuthJwtEncodeParams): Promise<string> {
   const { token = {}, maxAge = DEFAULT_MAX_AGE, salt = '' } = params
-  const secret = Array.isArray(params.secret) ? params.secret[0] : params.secret
+  const secret = params.secret
 
   if (!secret) {
     throw new Error('Missing auth JWT secret')
@@ -29,7 +29,7 @@ export async function encodeAuthJwt(params: {
   const encryptionSecret = await getDerivedEncryptionKey(secret, salt)
   const kid = await calculateJwkThumbprint(
     { kty: 'oct', k: base64url.encode(encryptionSecret) },
-    `sha${encryptionSecret.byteLength << 3}`
+    JWT_THUMBPRINT_DIGEST
   )
 
   return new EncryptJWT(token)
@@ -40,13 +40,9 @@ export async function encodeAuthJwt(params: {
     .encrypt(encryptionSecret)
 }
 
-export async function decodeAuthJwt(params: {
-  token?: string
-  secret?: string | string[]
-  salt?: string
-}) {
+export async function decodeAuthJwt(params: AuthJwtDecodeParams): Promise<JWT | null> {
   const { token, salt = '' } = params
-  const secrets = Array.isArray(params.secret) ? params.secret : [params.secret]
+  const secrets = [params.secret]
 
   if (!token) {
     return null
@@ -67,7 +63,7 @@ export async function decodeAuthJwt(params: {
 
         const thumbprint = await calculateJwkThumbprint(
           { kty: 'oct', k: base64url.encode(encryptionSecret) },
-          `sha${encryptionSecret.byteLength << 3}`
+          JWT_THUMBPRINT_DIGEST
         )
 
         if (kid === thumbprint) {
@@ -84,5 +80,5 @@ export async function decodeAuthJwt(params: {
     }
   )
 
-  return payload
+  return payload as JWT
 }
