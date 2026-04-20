@@ -46,7 +46,7 @@ export default NuxtAuthHandler({
   ],
   callbacks: {
     session({ session, token }) {
-      if (session.user) {
+      if (session.user && token && typeof token.email === 'string') {
         session.user.email = token.email
       }
 

@@ -14,12 +14,16 @@ export default defineNuxtConfig({
     adminEmails: process.env.NUXT_ADMIN_EMAILS,
     adminPassword: process.env.NUXT_ADMIN_PASSWORD,
     public: {
-      appName: 'TextureLab'
+      appName: 'TextureLab',
+      /** Canonical browser origin (no path); optional auth base is derived in `nuxt-modules/auth-public-base-url` */
+      siteUrl: process.env.NUXT_PUBLIC_SITE_URL
     }
   },
   auth: {
     provider: {
-      type: 'authjs'
+      type: 'authjs',
+      // Custom host (e.g. svg.ofsound.net) + Cloudflare: use forwarded Host/Proto for Auth.js
+      trustHost: true
     },
     // Default module key is AUTH_ORIGIN; align with Nuxt-style NUXT_AUTH_ORIGIN in .env
     originEnvKey: 'NUXT_AUTH_ORIGIN',

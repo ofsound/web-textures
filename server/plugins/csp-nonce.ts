@@ -1,8 +1,26 @@
+function responseBodyToString(body: unknown): string | undefined {
+  if (typeof body === 'string') {
+    return body
+  }
+  if (Buffer.isBuffer(body)) {
+    return body.toString('utf8')
+  }
+  if (body instanceof Uint8Array) {
+    return new TextDecoder('utf8').decode(body)
+  }
+  return undefined
+}
+
 export default defineNitroPlugin((nitroApp) => {
   nitroApp.hooks.hook('render:response', (response, { event }) => {
     const nonce = event?.context?.cspNonce
 
-    if (!nonce || typeof response.body !== 'string') {
+    if (!nonce) {
+      return
+    }
+
+    const html = responseBodyToString(response.body)
+    if (!html) {
       return
     }
 
@@ -15,6 +33,6 @@ export default defineNitroPlugin((nitroApp) => {
       return
     }
 
-    response.body = response.body.replace(/<script(?![^>]*\bnonce=)/g, `<script nonce="${nonce}"`)
+    response.body = html.replace(/<script(?![^>]*\bnonce=)/g, `<script nonce="${nonce}"`)
   })
 })

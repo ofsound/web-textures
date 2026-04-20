@@ -6,6 +6,10 @@ function resolveAuthBaseUrl(): string | undefined {
     const trimmed = raw.replace(/\/$/, '')
     return trimmed.endsWith('/api/auth') ? trimmed : `${trimmed}/api/auth`
   }
+  const site = process.env.NUXT_PUBLIC_SITE_URL
+  if (site) {
+    return `${site.replace(/\/$/, '')}/api/auth`
+  }
   const cf = process.env.CF_PAGES
   const onCfPages = cf === 'true' || cf === '1' || String(cf).toLowerCase() === 'true'
   const pagesUrl = process.env.CF_PAGES_URL
